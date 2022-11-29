@@ -1,6 +1,2 @@
 #!/bin/bash
-<<<<<<< HEAD
 python3 $PYFILE
-=======
-python3.8.5 $PYFILE
->>>>>>> c6266b923f21c8ce8c38eef6f19af86cfca74182
