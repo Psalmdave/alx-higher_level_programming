@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Creating a new class called Square"""
 
+
 class Square:
     """class Square that defines a square by: (based on 1-square.py)"""
     def __init__(self, size=0):
@@ -15,4 +16,4 @@ class Square:
 
     def area(self):
         """Method that returns the current square area"""
-        return self.__size * self.__size
+        return self.__size * self.
