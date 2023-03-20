@@ -1,26 +1,25 @@
 #!/usr/bin/python3
 """
-accepts 3 arguments (mysql username, password and database name)
-and lists all cities from that database
+prints all City objects from a database
 """
-import sys
-import MySQLdb
+
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sys import argv
+from model_state import Base, State
+from model_city import City
 
 
-def main(argv):
-    """connects to a given mysql database and lists all 'cities' from it"""
-    conn = MySQLdb.connect(host="localhost", port=3306,
-                           user=argv[1], passwd=argv[2], db=argv[3])
-    cur = conn.cursor()
-    cur.execute("SELECT cities.id, cities.name, states.name FROM cities LEFT JOIN states\
-                ON cities.state_id = states.id ORDER BY cities.id ASC")
-    query_rows = cur.fetchall()
-    for row in query_rows:
-        print(row)
-    cur.close()
-    conn.close()
-
-
-if __name__ == '__main__':
-    if len(sys.argv) == 4:
-        main(sys.argv)
+if __name__ == "__main__":
+    eng = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(argv[1],
+                                                                    argv[2],
+                                                                    argv[3]))
+    Base.metadata.create_all(eng)
+    Session = sessionmaker(bind=eng)
+    session = Session()
+    rows = session.query(City, State).filter(City.state_id == State.id)\
+                                     .order_by(City.id).all()
+    for city, state in rows:
+        print("{}: ({}) {}".format(state.name, city.id, city.name))
+    session.close()
